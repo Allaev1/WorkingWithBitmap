@@ -1,0 +1,85 @@
+﻿<Page
+    x:Class="WorkingWithBitmap.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uwpkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:storage="using:Windows.Storage"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Name="ItemTemplate" x:DataType="storage:StorageFile">
+            <TextBlock Text="{x:Bind Name}"/>
+        </DataTemplate>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="20,20,20,20"/>
+            <Setter Property="Width" Value="120"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <uwpkit:ImageEx x:Name="ImageHolderEx"  Margin="60,60,60,60"
+                        CornerRadius="4" BorderThickness="2" 
+                        HorizontalAlignment="Stretch"
+                        Stretch="UniformToFill" BorderBrush="#FFFBFBFB" 
+                        PlaceholderSource="/Assets/noimage.jpg" PlaceholderStretch="Uniform" Background="White"/>
+        <StackPanel  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnBrowse" Content="Browse..." Click="BtnBrowse_Click"/>
+            <Button x:Name="btnSaveAs" Content="Save as ..." Click="BtnSaveAs_Click" />
+            <Button x:Name="btnSave" Content="Save" Click="BtnSave_Click"/>
+            <Button x:Name="btnCancel" Content="Cancel" Click="BtnCancel_Click"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+            <!--<Button x:Name="RotateButton" Content="Rotate(right)" Click="RotateButton_Click" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Slider x:Name="X_Slider"
+                Grid.Row="1"
+                Orientation="Vertical"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Height="200"
+                ValueChanged= "X_Slider_ValueChanged"/>
+                <TextBlock Grid.Row="2"
+                   Text="X-axis" 
+                   FontSize="36" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"
+                   Margin="10"/>
+                <Slider x:Name="Y_Slider"
+                Grid.Row="1"
+                Grid.Column="1" 
+                Orientation="Vertical"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Height="200"
+                ValueChanged="Y_Slider_ValueChanged"/>
+                <TextBlock Grid.Column="1" 
+                   Grid.Row="2" 
+                   Text="Y-axis" 
+                   FontSize="36" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"
+                   Margin="10"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>
