@@ -28,11 +28,9 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <uwpkit:ImageEx x:Name="ImageHolderEx"  Margin="60,60,60,60"
-                        CornerRadius="4" BorderThickness="2" 
+        <Image x:Name="ImageHolderEx"  Margin="60,60,60,60"
                         HorizontalAlignment="Stretch"
-                        Stretch="UniformToFill" BorderBrush="#FFFBFBFB" 
-                        PlaceholderSource="/Assets/noimage.jpg" PlaceholderStretch="Uniform" Background="White"/>
+                        Source="/Assets/noimage.jpg"/>
         <StackPanel  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnBrowse" Content="Browse..." Click="BtnBrowse_Click"/>
             <Button x:Name="btnSaveAs" Content="Save as ..." Click="BtnSaveAs_Click" />

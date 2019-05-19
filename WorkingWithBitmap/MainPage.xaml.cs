@@ -44,6 +44,9 @@ namespace WorkingWithBitmap
 
                 ImageHolderEx.Source = writableBitmap;
             }
+
+            X_Slider.Maximum = writableBitmap.PixelWidth;
+            Y_Slider.Maximum = writableBitmap.PixelHeight;
         }
 
         private async void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -77,18 +80,13 @@ namespace WorkingWithBitmap
 
             Slider xSlider = sender as Slider;
 
-            X_Slider.Maximum = writableBitmap.PixelWidth;
-
             int newWidth = Convert.ToInt16(xSlider.Value);
 
             WriteableBitmap editedBitmap;
 
             using (writableBitmap.GetBitmapContext(ReadWriteMode.ReadWrite))
             {
-                editedBitmap = writableBitmap.Resize
-                    (newWidth, 
-                    writableBitmap.PixelHeight, 
-                    WriteableBitmapExtensions.Interpolation.NearestNeighbor);
+                editedBitmap = writableBitmap.Resize(newWidth, writableBitmap.PixelHeight, WriteableBitmapExtensions.Interpolation.NearestNeighbor);
             }
 
             ImageHolderEx.Source = editedBitmap;
@@ -100,16 +98,14 @@ namespace WorkingWithBitmap
 
             Slider ySlider = sender as Slider;
 
-            Y_Slider.Maximum = writableBitmap.PixelHeight;
-
             int newHeight = Convert.ToInt16(ySlider.Value);
 
             WriteableBitmap editedBitmap;
 
-            //using (writableBitmap.GetBitmapContext(/*ReadWriteMode.ReadWrite*/))
-            //{
-            editedBitmap = writableBitmap.Resize(writableBitmap.PixelWidth, newHeight, WriteableBitmapExtensions.Interpolation.Bilinear);
-            //}
+            using (writableBitmap.GetBitmapContext(ReadWriteMode.ReadWrite))
+            {
+                editedBitmap = writableBitmap.Resize(writableBitmap.PixelWidth, newHeight, WriteableBitmapExtensions.Interpolation.Bilinear);
+            }
 
             ImageHolderEx.Source = editedBitmap;
         }
