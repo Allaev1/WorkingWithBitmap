@@ -28,9 +28,11 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Image x:Name="ImageHolderEx"  Margin="60,60,60,60"
-                        HorizontalAlignment="Stretch"
-                        Source="/Assets/noimage.jpg"/>
+        <Image x:Name="ImageHolderEx"  
+               Margin="60,60,60,60"
+               HorizontalAlignment="Center"
+               Stretch="Uniform"
+               Source="/Assets/noimage.jpg"/>
         <StackPanel  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnBrowse" Content="Browse..." Click="BtnBrowse_Click"/>
             <Button x:Name="btnSaveAs" Content="Save as ..." Click="BtnSaveAs_Click" />
