@@ -132,11 +132,9 @@ namespace WorkingWithBitmap
 
             StorageStreamTransaction streamTransaction = await imageFile.OpenTransactedWriteAsync();
 
-            //Открываем поток файла в который мы хотим записать изменённую фотографию(этот сценарий описан в ссылке ниже)
+            //Открываем поток файла в который мы хотим записать изменённую фотографию
             //https://docs.microsoft.com/en-gb/windows/uwp/audio-video-camera/imaging#save-a-softwarebitmap-to-a-file-with-bitmapencoder
-
-            //Это второй вариант. 
-            using (var stream = streamTransaction.Stream)
+            using (IRandomAccessStream stream = await imageFile.OpenAsync(FileAccessMode.ReadWrite))
             {
                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegXREncoderId, stream);
 
