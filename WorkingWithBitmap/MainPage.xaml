@@ -35,8 +35,8 @@
                Source="/Assets/noimage.jpg"/>
         <StackPanel  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnBrowse" Content="Browse..." Click="BtnBrowse_Click"/>
-            <Button x:Name="btnSaveAs" Content="Save as ..." Click="BtnSaveAs_Click" />
-            <Button x:Name="btnSave" Content="Save" Click="BtnSave_Click"/>
+            <Button x:Name="btnSaveAs" Content="Save as ..." IsEnabled="False" Click="BtnSaveAs_Click" />
+            <Button x:Name="btnSave" Content="Save" IsEnabled="False" Click="BtnSave_Click"/>
             <Button x:Name="btnCancel" Content="Cancel" Click="BtnCancel_Click"/>
         </StackPanel>
         <StackPanel Grid.Column="1" VerticalAlignment="Bottom">

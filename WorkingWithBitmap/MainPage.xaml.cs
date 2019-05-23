@@ -45,6 +45,12 @@ namespace WorkingWithBitmap
 
             X_Slider.Maximum = writableBitmap.PixelWidth;
             Y_Slider.Maximum = writableBitmap.PixelHeight;
+
+            btnSave.IsEnabled = false;
+            btnSaveAs.IsEnabled = false;
+
+            //X_Slider.Value = 0;
+            //Y_Slider.Value = 0;
         }
 
         private async void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -55,23 +61,30 @@ namespace WorkingWithBitmap
 
                 ImageHolderEx.Source = writableBitmap;
             }
+
+            btnSave.IsEnabled = false;
+            btnSaveAs.IsEnabled = false;
         }
 
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            StorageFile fileToReplace = await GetImageInFile(editedBitmap);
-
-            await imageFile.CopyAndReplaceAsync(fileToReplace);
+            await WriteImageToFileAsync(imageFile, editedBitmap);
         }
 
         private async void BtnSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            StorageFile newFileImage = await GetImageInFile(editedBitmap);
+            //Файл в который я хочу записать фотографию
+            StorageFile imageFile = await GetSaveFilePicker();
+
+            await WriteImageToFileAsync(imageFile, editedBitmap);
         }
 
         private void X_Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (writableBitmap == null) return;
+
+            btnSave.IsEnabled = true;
+            btnSaveAs.IsEnabled = true;
 
             Slider xSlider = sender as Slider;
 
@@ -88,6 +101,9 @@ namespace WorkingWithBitmap
         private void Y_Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (writableBitmap == null) return;
+
+            btnSave.IsEnabled = true;
+            btnSaveAs.IsEnabled = true;
 
             Slider ySlider = sender as Slider;
 
@@ -115,42 +131,35 @@ namespace WorkingWithBitmap
         }
 
         /// <summary>
-        /// Возвращает файл в который записывается фотография
+        /// Записывает фотографию в файл
         /// </summary>
-        /// <param name="bitmapForSave">
-        /// Фотография которую нужно записать 
+        /// <param name="imageFile">
+        /// Файл в который нужно записать фотографию
         /// </param>
-        /// <returns>
-        /// Файл с записанной в ней фотографией
-        /// </returns>
-        private async Task<StorageFile> GetImageInFile(WriteableBitmap bitmapForSave)
+        /// <param name="bitmapForWrite">
+        /// Фотографию которую нужно записать в файл
+        /// </param>
+        private async Task WriteImageToFileAsync(StorageFile imageFile,WriteableBitmap bitmapForWrite)
         {
-            //Файл в который я хочу записать фотографию
-            StorageFile imageFile = await SaveFile();
-
-            //StorageStreamTransaction streamTransaction = await imageFile.OpenTransactedWriteAsync();
-
             //Открываем поток файла в который мы хотим записать изменённую фотографию
             //https://docs.microsoft.com/en-gb/windows/uwp/audio-video-camera/imaging#save-a-softwarebitmap-to-a-file-with-bitmapencoder
             using (IRandomAccessStream stream = await imageFile.OpenAsync(FileAccessMode.ReadWrite))
             {
                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
 
-                Stream pixelStream = editedBitmap.PixelBuffer.AsStream();
+                Stream pixelStream = bitmapForWrite.PixelBuffer.AsStream();
                 byte[] pixels = new byte[pixelStream.Length];
                 await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
                 encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
-                                    (uint)editedBitmap.PixelWidth,
-                                    (uint)editedBitmap.PixelHeight,
+                                    (uint)bitmapForWrite.PixelWidth,
+                                    (uint)bitmapForWrite.PixelHeight,
                                     96.0,
                                     96.0,
                                     pixels);
 
                 await encoder.FlushAsync();
             }
-
-            return imageFile;
         }
 
         /// <summary>
@@ -159,7 +168,7 @@ namespace WorkingWithBitmap
         /// <param name="fileForSave">
         /// Файл который нужно сохранить
         /// </param>
-        private async Task<StorageFile> SaveFile()
+        private async Task<StorageFile> GetSaveFilePicker()
         {
             FileSavePicker fileSavePicker = new FileSavePicker();
             fileSavePicker.FileTypeChoices.Add("", new List<string>() { ".jpg", ".jpeg", ".png" });
