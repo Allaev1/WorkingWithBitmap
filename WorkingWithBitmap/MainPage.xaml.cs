@@ -130,7 +130,7 @@ namespace WorkingWithBitmap
             //Файл в который я хочу записать фотографию
             StorageFile imageFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("ImageFile", CreationCollisionOption.ReplaceExisting);
 
-            StorageStreamTransaction streamTransaction = await imageFile.OpenTransactedWriteAsync();
+            //StorageStreamTransaction streamTransaction = await imageFile.OpenTransactedWriteAsync();
 
             //Открываем поток файла в который мы хотим записать изменённую фотографию
             //https://docs.microsoft.com/en-gb/windows/uwp/audio-video-camera/imaging#save-a-softwarebitmap-to-a-file-with-bitmapencoder
