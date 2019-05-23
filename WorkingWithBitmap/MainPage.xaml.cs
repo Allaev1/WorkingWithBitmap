@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace WorkingWithBitmap
 {
@@ -64,7 +65,7 @@ namespace WorkingWithBitmap
         }
 
         private async void BtnSaveAs_Click(object sender, RoutedEventArgs e)
-        { 
+        {
             StorageFile newFileImage = await GetImageInFile(editedBitmap);
 
             await SaveFile(newFileImage);
@@ -126,13 +127,18 @@ namespace WorkingWithBitmap
         /// </returns>
         private async Task<StorageFile> GetImageInFile(WriteableBitmap bitmapForSave)
         {
-            StorageFile imageFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(Guid.NewGuid().ToString());
+            //Файл в который я хочу записать фотографию
+            StorageFile imageFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("ImageFile", CreationCollisionOption.ReplaceExisting);
 
-            //Открываем поток файла в который мы хотим записать изменённую фотографию
+            StorageStreamTransaction streamTransaction = await imageFile.OpenTransactedWriteAsync();
+
+            //Открываем поток файла в который мы хотим записать изменённую фотографию(этот сценарий описан в ссылке ниже)
             //https://docs.microsoft.com/en-gb/windows/uwp/audio-video-camera/imaging#save-a-softwarebitmap-to-a-file-with-bitmapencoder
-            using (IRandomAccessStream stream = await imageFile.OpenAsync(FileAccessMode.ReadWrite))
+
+            //Это второй вариант. 
+            using (var stream = streamTransaction.Stream)
             {
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegXREncoderId, stream);
 
                 //Создаем экземпляр на основе writableBitmap
                 //https://docs.microsoft.com/en-gb/windows/uwp/audio-video-camera/imaging#create-a-softwarebitmap-from-a-writeablebitmap
@@ -143,11 +149,7 @@ namespace WorkingWithBitmap
                     bitmapForSave.PixelHeight,
                     BitmapAlphaMode.Ignore);
 
-                //encoder.SetSoftwareBitmap(softwareBitmap);
-                Stream pixelStream = bitmapForSave.PixelBuffer.AsStream();
-                byte[] pixels = new byte[pixelStream.Length];
-                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmapForSave.PixelWidth, (uint)bitmapForSave.PixelHeight, 96.0, 96.0, pixels);
+                encoder.SetSoftwareBitmap(softwareBitmap);
 
                 await encoder.FlushAsync();
             }
@@ -167,7 +169,6 @@ namespace WorkingWithBitmap
             fileSavePicker.SuggestedSaveFile = fileForSave;
             fileSavePicker.FileTypeChoices.Add("", new List<string>() { ".jpg", ".jpeg", ".png" });
             fileSavePicker.SuggestedStartLocation = PickerLocationId.Desktop;
-            fileSavePicker.SuggestedFileName = "hello";
 
             await fileSavePicker.PickSaveFileAsync();
         }
