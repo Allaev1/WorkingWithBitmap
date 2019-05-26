@@ -116,6 +116,41 @@ namespace WorkingWithBitmap
 
             ImageHolderEx.Source = editedBitmap;
         }
+
+        private void GrayScale_Click(object sender, RoutedEventArgs e)
+        {
+            if (writableBitmap == null) return;
+
+            btnSave.IsEnabled = true;
+            btnSaveAs.IsEnabled = true;
+            using (writableBitmap.GetBitmapContext(ReadWriteMode.ReadWrite))
+            {
+                editedBitmap = writableBitmap.Gray();
+            }
+
+            ImageHolderEx.Source = editedBitmap;
+        }
+        private void Revert_Click(object sender, RoutedEventArgs e)
+        {
+            if (writableBitmap == null) return;
+
+            btnSave.IsEnabled = true;
+            btnSaveAs.IsEnabled = true;
+
+            writableBitmap.Invalidate();
+
+            ImageHolderEx.Source = writableBitmap;
+        }
+
+        private void Invert_Click(object sender, RoutedEventArgs e)
+        {
+            using (writableBitmap.GetBitmapContext(ReadWriteMode.ReadWrite))
+            {
+                editedBitmap = writableBitmap.Invert();
+            }
+
+            ImageHolderEx.Source = editedBitmap;
+        }
         #endregion
 
         #region private functions

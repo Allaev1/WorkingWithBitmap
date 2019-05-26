@@ -39,8 +39,13 @@
             <Button x:Name="btnSave" Content="Save" IsEnabled="False" Click="BtnSave_Click"/>
             <Button x:Name="btnCancel" Content="Cancel" Click="BtnCancel_Click"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
-            <!--<Button x:Name="RotateButton" Content="Rotate(right)" Click="RotateButton_Click" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+        <StackPanel Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center">
+            <StackPanel.Background>
+                <AcrylicBrush TintColor="#CCD8D8D8"/>
+            </StackPanel.Background>
+            <Button x:Name="GrayScale" Content="Remove color" Click="GrayScale_Click" HorizontalAlignment="Center"/>
+            <Button x:Name="Revert" Content="Revert color" Click="Revert_Click" HorizontalAlignment="Center"/>
+            <Button x:Name="Invert" Content="Invert color" Click="Invert_Click" HorizontalAlignment="Center"/>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
